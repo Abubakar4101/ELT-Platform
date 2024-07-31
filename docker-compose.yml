@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017  # Expose MongoDB port
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - 6379:6379
+
+  app:
+    build: .
+    restart: always
+    working_dir: /app/elt-plateform
+    volumes:
+      - .:/app/elt-plateform
+    command: node index.js
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+      - redis
+      
