@@ -8,10 +8,11 @@ services:
       - 27017:27017  # Expose MongoDB port
 
   redis:
-    image: redis:latest
+    image: redis/redis-stack:latest
     restart: always
     ports:
       - 6379:6379
+      - 8001:8001  # Expose RedisInsight port
 
   app:
     build: .
