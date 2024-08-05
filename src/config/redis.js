@@ -1,6 +1,8 @@
 // redis.js
 const redis = require('redis');
-require('dotenv').config();
+
+// Load environment variables from.env file
+require('dotenv').config({ path: './config.env' });
 
 const client = redis.createClient({
   url: process.env.REDIS_URL

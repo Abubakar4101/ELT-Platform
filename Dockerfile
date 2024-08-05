@@ -13,6 +13,8 @@ RUN apt-get update && \
     sudo \
     vim \
     wget \
+    redis-server \
+    redis \
     software-properties-common \
     && rm -rf /var/lib/apt/lists/*
 
@@ -21,7 +23,7 @@ RUN curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash - && \
     apt-get install -y nodejs
 
 # Set the working directory
-WORKDIR /app/elt-plateform
+WORKDIR /elt-platform
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -33,7 +35,7 @@ RUN npm install
 COPY . .
 
 # Expose the application port
-EXPOSE 3000
+EXPOSE 3000 6379 8001
 
 # Start the application
-CMD ["node", "index.js"]
+CMD ["npm", "start"]

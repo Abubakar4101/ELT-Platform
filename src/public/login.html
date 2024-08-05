@@ -1,0 +1,51 @@
+<!-- public/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-white flex items-center justify-center h-screen">
+  <div id="login" class="bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">Sign In</h1>
+    <form id="loginForm" class="space-y-4">
+      <input type="email" id="email" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Enter your email" required />
+      <input type="text" id="workspaceId" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Enter workspace ID" />
+      <button type="submit" class="w-full p-2 rounded bg-indigo-600 hover:bg-indigo-700 focus:outline-none">Sign In</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const workspaceId = document.getElementById('workspaceId').value;
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+        if (data.message) {
+          if (workspaceId) {
+            window.location.href = `/?workspace=${workspaceId}`;
+          }
+        } else {
+          alert('Login failed: ' + data.error);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred, please try again.');
+      }
+    });
+  </script>
+</body>
+
+</html>

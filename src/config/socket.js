@@ -17,15 +17,15 @@ const initSocket = (server) => {
     console.log('New client connected:', socket.id);
 
     // Handle joining a workspace room
-    socket.on('joinWorkspace', (workplaceId) => {
-      socket.join(workplaceId);
-      console.log(`User joined workspace: ${workplaceId}`);
+    socket.on('joinWorkspace', (workspaceId) => {
+      socket.join(workspaceId);
+      console.log(`User joined workspace: ${workspaceId}`);
     });
 
     // Handle leaving a workspace room
-    socket.on('leaveWorkspace', (workplaceId) => {
-      socket.leave(workplaceId);
-      console.log(`User left workspace: ${workplaceId}`);
+    socket.on('leaveWorkspace', (workspaceId) => {
+      socket.leave(workspaceId);
+      console.log(`User left workspace: ${workspaceId}`);
     });
 
     socket.on('disconnect', () => {
