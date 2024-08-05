@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
       await redisClient.set(`session:${sessionId}`, JSON.stringify({ userId: user._id }), 'EX', 3600); // Store the session in Redis for 1 hour
 
       res.cookie('sessionId', sessionId, { httpOnly: true, maxAge: 3600 * 1000 }); // Set the session ID in a cookie
-      res.json({ message: 'Login successful!' });
+      res.json({ userId: user._id, message: 'Login successful!' });
     } else {
       res.status(404).json({ error: 'User not found' });
     }

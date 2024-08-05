@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const SourceSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  workspace_id: { type: String, ref: 'Workspace', required: true },
+  workspace_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Workspace', required: true },
   type: { type: String, required: true },
   configuration: { type: Object, required: true },
 }, { timestamps: true });

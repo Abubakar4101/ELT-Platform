@@ -2,15 +2,17 @@
 const User = require('../models/User');
 const Workspace = require('../models/Workspace');
 const Source = require('../models/Source');
+const UnreadNotification = require('../models/UnreadNotification');
 
 const dummyData = async () => {
     try {
         // Clear existing data
-        if (User && Workspace && Source) {
-            await User.deleteMany({});
-            await Workspace.deleteMany({});
-            await Source.deleteMany({});
-        }
+        // if (User && Workspace && Source) {
+        //     await User.deleteMany({});
+        //     await Workspace.deleteMany({});
+        //     await Source.deleteMany({});
+        //     await UnreadNotification.deleteMany({});
+        // }
         // Add workspaces
         const workspace1 = await Workspace.create({ name: 'Workspace 1' });
         const workspace2 = await Workspace.create({ name: 'Workspace 2' });

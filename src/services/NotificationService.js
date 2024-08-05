@@ -1,13 +1,13 @@
 const UnreadNotification = require('../models/UnreadNotification');
 const ReadNotification = require('../models/ReadNotification');
 const redisClient = require('../config/redis');
-const { getUsersByWorkspaceId } = require('../routes/getUsers');
+const { getUsersByWorkspaceId } = require('../routes/getUsersByWorkspaceId');
 
 class NotificationService {
   /**
    * Create a new notification and store it in Redis.
-   * @param {String} workspaceId - Workspace ID.
-   * @param {String} sourceId - Source ID.
+   * @param {Object} workspaceId - Workspace ID.
+   * @param {Object} sourceId - Source ID.
    * @param {String} type - Notification type.
    * @param {String} message - Notification message.
    * @returns {Object} The created notification.
@@ -17,7 +17,7 @@ class NotificationService {
     try {
       // Retrieve user IDs from Redis if not found then from MongoDB
         let users = await getUsersByWorkspaceId(workspaceId);
-        let userIds = users.map(user => user._id.toString());
+        let userIds = users.map(user => user._id);
         
       // Create new notification
       const notification = new UnreadNotification({
@@ -47,7 +47,7 @@ class NotificationService {
 
       // Notify users in the workspace
       const io = global.io;
-      io.to(workspaceId).emit('notification', { type, message });
+      io.to(workspaceId.toString()).emit('notification', { type, message });
 
       return notification;
     } catch (err) {

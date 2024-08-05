@@ -7,8 +7,8 @@ const cookieParser = require('cookie-parser');
 const sessionMiddleware = require('./middleware/sessionMiddleware');
 const loginRoute = require('./routes/login');
 const indexRoute = require('./routes/index');
-const getUsers = require('./routes/getUsers');
-const getWorkspaces = require('./routes/getWorkspaces');
+const getUsers = require('./routes/getUsersByWorkspaceId');
+const getWorkspaces = require('./routes/getWorkspacesByUserId');
 
 // Load environment variables from.env file
 require('dotenv').config({ path: './config.env' });

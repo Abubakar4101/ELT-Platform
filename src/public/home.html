@@ -10,24 +10,52 @@
 </head>
 
 <body class="bg-gray-900 text-white flex items-center justify-center h-screen">
-  <div class="bg-gray-800 p-8 rounded-lg shadow-md">
+  <div class="bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-md">
     <h1 class="text-2xl font-bold mb-6 text-center">Welcome Home!</h1>
     <p class="text-center">You are successfully logged in.</p>
+    <div id="workspaces" class="mt-4"></div>
   </div>
   <div id="notifications" class="fixed bottom-0 right-0 p-4"></div>
   <script>
-
     const socket = io();
     const urlParams = new URLSearchParams(window.location.search);
-    const workspaceId = urlParams.get('workspace');
+    const userId = urlParams.get('user');
 
-    // Join the workspace room
-    socket.emit('joinWorkspace', workspaceId);
+    // Fetch the user's workspaces
+    async function fetchWorkspaces(userId) {
+      try {
+        const response = await fetch(`/api/users/${userId}/workspaces`);
+        const data = await response.json();
+        if (data.workspaces) {
+          displayWorkspaces(data.workspaces);
+        } else {
+          console.error('Failed to fetch workspaces:', data.error);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Display the workspaces
+    function displayWorkspaces(workspaces) {
+      const workspacesDiv = document.getElementById('workspaces');
+      workspaces.forEach(workspace => {
+        const workspaceElement = document.createElement('div');
+        workspaceElement.classList.add('bg-gray-700', 'p-4', 'rounded', 'shadow', 'mb-2');
+        workspaceElement.innerText = workspace.name;
+        workspacesDiv.appendChild(workspaceElement);
+        socket.emit('joinWorkspace', workspace._id);
+      });
+    }
+
+    // Fetch and display workspaces on page load
+    fetchWorkspaces(userId);
+
     // Handle incoming notifications
     socket.on('notification', (notification) => {
       const notificationsDiv = document.getElementById('notifications');
       const notificationElement = document.createElement('div');
-      notificationElement.classList.add('bg-gray-700', 'p-4', 'rounded', 'shadow');
+      notificationElement.classList.add('bg-gray-700', 'p-4', 'rounded', 'shadow', 'mb-2');
       notificationElement.innerHTML = `<p><strong>${notification.type}</strong>: ${notification.message}</p>`;
       notificationsDiv.appendChild(notificationElement);
     });

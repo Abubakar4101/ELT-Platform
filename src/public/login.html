@@ -1,4 +1,3 @@
-<!-- public/login.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,7 +13,6 @@
     <h1 class="text-2xl font-bold mb-6 text-center">Sign In</h1>
     <form id="loginForm" class="space-y-4">
       <input type="email" id="email" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Enter your email" required />
-      <input type="text" id="workspaceId" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Enter workspace ID" />
       <button type="submit" class="w-full p-2 rounded bg-indigo-600 hover:bg-indigo-700 focus:outline-none">Sign In</button>
     </form>
   </div>
@@ -22,8 +20,6 @@
     document.getElementById('loginForm').addEventListener('submit', async function (e) {
       e.preventDefault();
       const email = document.getElementById('email').value;
-      const workspaceId = document.getElementById('workspaceId').value;
-
       try {
         const response = await fetch('/login', {
           method: 'POST',
@@ -33,10 +29,8 @@
           body: JSON.stringify({ email })
         });
         const data = await response.json();
-        if (data.message) {
-          if (workspaceId) {
-            window.location.href = `/?workspace=${workspaceId}`;
-          }
+        if (data.userId) {
+          window.location.href = `/?user=${data.userId}`;
         } else {
           alert('Login failed: ' + data.error);
         }
