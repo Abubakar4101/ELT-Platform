@@ -16,15 +16,13 @@ const initSocket = (server) => {
 
   io.on('connection', (socket) => {
     console.log('New client connected:', socket.id);
-    global.userSockets = {userId: socket.id};
-
     // Handle joining a workspace room
     socket.on('joinWorkspace', async (workspaceId) => {
       socket.join(workspaceId);
       // Emit missed events from Redis
       const missedEvents = await redisClient.lRange(`missedEvents:${workspaceId.toString()}:${userId}`, 0, -1);
       if (missedEvents) missedEvents.forEach(notification => {
-        io.to(workspaceId.toString()).timeout(5000).emit('notification', JSON.parse(notification));
+        socket.timeout(5000).emit('notification', JSON.parse(notification));
 
         socket.on('acknowledged', (acknowledged) => {
           console.log(`User acknowledge: ${acknowledged}`);
@@ -47,7 +45,6 @@ const initSocket = (server) => {
 
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id);
-      delete global.userSockets[userId];
     });
   });
 
