@@ -20,7 +20,6 @@
     const socket = io();
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user');
-    if(userId) socket.userId = userId;
 
     // Fetch the user's workspaces
     async function fetchWorkspaces(userId) {
@@ -56,8 +55,7 @@
     socket.on('notification', (notification) => {
       let acknowledged = true;
       displayNotification(notification);
-      // if (callback) callback(acknowledged);
-      socket.emit('acknowledged', acknowledged);
+      socket.emit('acknowledged', acknowledged, userId, notification);
     });
 
     // Display notifications

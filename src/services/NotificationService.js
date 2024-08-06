@@ -30,8 +30,6 @@ class NotificationService {
       });
       // Save to MongoDB
       await notification.save();
-      console.log("From Creation Notification -- ",notification);
-
       // Save to Redis
       await redisClient.lPush(
         `notifications:${workspaceId}`,
@@ -48,14 +46,9 @@ class NotificationService {
       // Notify users in the workspace
       const io = global.io;
       userIds.forEach(userId => {
-        io.to(workspaceId.toString()).emit('notification', { type, message });
         redisClient.lPush(`missedEvents:${workspaceId}:${userId}`, JSON.stringify({ type, message }));
-        io.on('acknowledge', (acknowledged) =>{
-          console.log("acknowledged", acknowledged);
-          // Remove acknowledged notification from Redis
-          redisClient.lRem(`missedEvents:${workspaceId}:${userId}`, 0, JSON.stringify({ type, message }));
-        })
-          
+
+        if(global.userId == userId) io.emit('notification', { type, message });
       });
       // , (acknowledged) => {
       //   console.log("from change stream: ", acknowledged);

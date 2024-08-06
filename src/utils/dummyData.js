@@ -6,14 +6,14 @@ const UnreadNotification = require('../models/UnreadNotification');
 
 const dummyData = async () => {
     try {
-        // Clear existing data
+       // Clear existing data
         // if (User && Workspace && Source && UnreadNotification) {
         //     await User.deleteMany({});
         //     await Workspace.deleteMany({});
         //     await Source.deleteMany({});
         //     await UnreadNotification.deleteMany({});
         // }
-        // // Add workspaces
+        // Add workspaces
         const workspace1 = await Workspace.create({ name: 'Workspace 1' });
         const workspace2 = await Workspace.create({ name: 'Workspace 2' });
         const workspace3 = await Workspace.create({ name: 'Workspace 3' });
@@ -30,12 +30,6 @@ const dummyData = async () => {
         await Workspace.findByIdAndUpdate(workspace1._id, { user_ids: [user1._id, user2._id] });
         await Workspace.findByIdAndUpdate(workspace2._id, { user_ids: [user3._id, user4._id] });
         await Workspace.findByIdAndUpdate(workspace3._id, { user_ids: [user1._id, user3._id] });
-
-        // Add sources
-        await Source.create({ workspace_id: workspace1._id, name: 'Database Source', type: 'Database', configuration: {} });
-        await Source.create({ workspace_id: workspace1._id, name: 'API Source', type: 'API', configuration: {} });
-        await Source.create({ workspace_id: workspace2._id, name: 'File Source', type: 'File', configuration: {} });
-        await Source.create({ workspace_id: workspace3._id, name: 'Streaming Source', type: 'Streaming', configuration: {} });
 
         console.log('Dummy data inserted successfully');
     } catch (error) {

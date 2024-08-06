@@ -9,6 +9,8 @@ const loginRoute = require('./routes/login');
 const indexRoute = require('./routes/index');
 const getUsers = require('./routes/getUsersByWorkspaceId');
 const getWorkspaces = require('./routes/getWorkspacesByUserId');
+const manipulateSources = require('./routes/manipulateSources');
+
 
 // Load environment variables from.env file
 require('dotenv').config({ path: './config.env' });
@@ -31,6 +33,7 @@ app.use('/login', loginRoute);
 app.use('/', indexRoute);
 app.use('/api', getUsers);
 app.use('/api', getWorkspaces);
+app.use('/', manipulateSources)
 
 // Start the server
 const server = app.listen(process.env.PORT, () => {
