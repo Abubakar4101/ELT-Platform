@@ -7,13 +7,13 @@ const UnreadNotification = require('../models/UnreadNotification');
 const dummyData = async () => {
     try {
         // Clear existing data
-        // if (User && Workspace && Source) {
+        // if (User && Workspace && Source && UnreadNotification) {
         //     await User.deleteMany({});
         //     await Workspace.deleteMany({});
         //     await Source.deleteMany({});
         //     await UnreadNotification.deleteMany({});
         // }
-        // Add workspaces
+        // // Add workspaces
         const workspace1 = await Workspace.create({ name: 'Workspace 1' });
         const workspace2 = await Workspace.create({ name: 'Workspace 2' });
         const workspace3 = await Workspace.create({ name: 'Workspace 3' });

@@ -47,8 +47,23 @@ class NotificationService {
 
       // Notify users in the workspace
       const io = global.io;
-      io.to(workspaceId.toString()).emit('notification', { type, message });
-
+      userIds.forEach(userId => {
+        io.to(workspaceId.toString()).emit('notification', { type, message });
+        redisClient.lPush(`missedEvents:${workspaceId}:${userId}`, JSON.stringify({ type, message }));
+        io.on('acknowledge', (acknowledged) =>{
+          console.log("acknowledged", acknowledged);
+          // Remove acknowledged notification from Redis
+          redisClient.lRem(`missedEvents:${workspaceId}:${userId}`, 0, JSON.stringify({ type, message }));
+        })
+          
+      });
+      // , (acknowledged) => {
+      //   console.log("from change stream: ", acknowledged);
+      //   // Store missed events in Redis if not acknowledged
+      //   if (!acknowledged) {
+      //     redisClient.lPush(`missedEvents:${workspaceId}:${userId}`, JSON.stringify({ type, message }));
+      //   }
+      // }
       return notification;
     } catch (err) {
       console.error('Error creating notification:', err);

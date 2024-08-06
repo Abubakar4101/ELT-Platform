@@ -20,6 +20,7 @@
     const socket = io();
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user');
+    if(userId) socket.userId = userId;
 
     // Fetch the user's workspaces
     async function fetchWorkspaces(userId) {
@@ -53,12 +54,21 @@
 
     // Handle incoming notifications
     socket.on('notification', (notification) => {
+      let acknowledged = true;
+      displayNotification(notification);
+      // if (callback) callback(acknowledged);
+      socket.emit('acknowledged', acknowledged);
+    });
+
+    // Display notifications
+    function displayNotification(notification) {
       const notificationsDiv = document.getElementById('notifications');
       const notificationElement = document.createElement('div');
-      notificationElement.classList.add('bg-gray-700', 'p-4', 'rounded', 'shadow', 'mb-2');
-      notificationElement.innerHTML = `<p><strong>${notification.type}</strong>: ${notification.message}</p>`;
+      notificationElement.classList.add('bg-blue-500', 'text-white', 'p-4', 'rounded', 'shadow', 'mb-2');
+      notificationElement.innerText = `${notification.type}: ${notification.message}`;
       notificationsDiv.appendChild(notificationElement);
-    });
+    }
+
   </script>
 </body>
 
