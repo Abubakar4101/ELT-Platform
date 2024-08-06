@@ -28,9 +28,9 @@ class NotificationService {
         message,
         created_at: new Date(),
       });
-
       // Save to MongoDB
       await notification.save();
+      console.log("From Creation Notification -- ",notification);
 
       // Save to Redis
       await redisClient.lPush(

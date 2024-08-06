@@ -14,7 +14,7 @@ services:
     restart: always
     working_dir: /elt-platform
     volumes:
-      - "/Users/AbdulbakrSiddique/Desktop/Programmers Force/ELT:/elt-platform"
+      - "D://Programmers Force//ELT:/elt-platform"
     ports:
       - 3000:3000
     depends_on:
