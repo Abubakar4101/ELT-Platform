@@ -23,23 +23,28 @@ const watchSources = async () => {
       let workspace_id = '';
       let name = '';
       let message = '';
+      let sendNotification = false
 
       if (change.operationType === 'insert') {
         ({ _id, workspace_id, name } = change.fullDocument);
         let workspace = await getWorkspace(workspace_id);
-        changeType = 'source_added';
-        message = `A new source "${name}" was added to ${workspace.name}.`;
-        // Store the new document in Redis
-        await redisClient.set(`source:${_id}`, JSON.stringify({...change.fullDocument, workspaceName: workspace.name}));
+        if (workspace) {
+          changeType = 'source_added';
+          message = `A new source "${name}" was added to ${workspace.name}.`;
+          // Store the new document in Redis
+          await redisClient.set(`source:${_id}`, JSON.stringify({ ...change.fullDocument, workspaceName: workspace.name }));
+          sendNotification = true;
+        }
       } else if (change.operationType === 'delete') {
         const cachedDocument = await redisClient.get(`source:${change.documentKey._id}`);
         if (cachedDocument) {
-          ({ _id, workspace_id, name, workspaceName} = JSON.parse(cachedDocument));
+          ({ _id, workspace_id, name, workspaceName } = JSON.parse(cachedDocument));
           changeType = 'source_removed';
           message = `The source "${name}" was removed from ${workspaceName}.`;
 
           // Remove the document from Redis
           await redisClient.del(`source:${change.documentKey._id}`);
+          sendNotification = true;
         }
       } else if (change.operationType === 'update') {
         const cachedDocument = await redisClient.get(`source:${change.documentKey._id}`);
@@ -50,11 +55,12 @@ const watchSources = async () => {
 
           // Update the document in Redis
           await redisClient.set(`source:${_id}`, JSON.stringify(change.updateDescription.updatedFields));
+          sendNotification = true;
         }
       }
 
       // Create and send notification
-      await NotificationService.createNotification(
+       if(sendNotification) await NotificationService.createNotification(
         new mongoose.Types.ObjectId(workspace_id),
         new mongoose.Types.ObjectId(_id),
         changeType,
