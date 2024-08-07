@@ -11,8 +11,7 @@ const getUsers = require('./routes/getUsersByWorkspaceId');
 const getWorkspaces = require('./routes/getWorkspacesByUserId');
 const manipulateSources = require('./routes/manipulateSources');
 
-
-// Load environment variables from.env file
+// Load environment variables from .env file
 require('dotenv').config({ path: './config.env' });
 
 // Connect to MongoDB
@@ -25,23 +24,23 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(sessionMiddleware);
 
-// Serve static files
+// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes
-app.use('/login', loginRoute);
-app.use('/', indexRoute);
-app.use('/api', getUsers);
-app.use('/api', getWorkspaces);
-app.use('/', manipulateSources)
+// Define routes
+app.use('/login', loginRoute);                // Handle user login
+app.use('/', indexRoute);                     // Serve the home or login page based on session
+app.use('/api', getUsers);                    // Get users by workspace ID
+app.use('/api', getWorkspaces);               // Get workspaces by user ID
+app.use('/', manipulateSources);              // Manipulate sources (create, update, delete)
 
-// Start the server
+// Start the server and listen on the specified port
 const server = app.listen(process.env.PORT, () => {
   console.log(`Server running at http://localhost:${process.env.PORT}/`);
 });
 
-// Initialize Socket.io
+// Initialize Socket.io for real-time communication
 global.io = initSocket(server);
 
-// Watch for changes in the Source collection
+// Watch for changes in the Source collection to send notifications
 watchSources();

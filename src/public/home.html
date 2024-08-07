@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Socket.io for real-time communication -->
   <script src="/socket.io/socket.io.js"></script>
 </head>
 
@@ -16,12 +17,13 @@
     <div id="workspaces" class="mt-4"></div>
   </div>
   <div id="notifications" class="fixed bottom-0 right-0 p-4"></div>
-  <script>
-    const socket = io();
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('user');
 
-    // Fetch the user's workspaces
+  <script>
+    const socket = io(); // Initialize Socket.io
+    const urlParams = new URLSearchParams(window.location.search); // Get URL parameters
+    const userId = urlParams.get('user'); // Get the user ID from the URL
+
+    // Fetch the user's workspaces from the server
     async function fetchWorkspaces(userId) {
       try {
         const response = await fetch(`/api/users/${userId}/workspaces`);
@@ -36,7 +38,7 @@
       }
     }
 
-    // Display the workspaces
+    // Display the workspaces on the page
     function displayWorkspaces(workspaces) {
       const workspacesDiv = document.getElementById('workspaces');
       workspaces.forEach(workspace => {
@@ -44,21 +46,21 @@
         workspaceElement.classList.add('bg-gray-700', 'p-4', 'rounded', 'shadow', 'mb-2');
         workspaceElement.innerText = workspace.name;
         workspacesDiv.appendChild(workspaceElement);
-        socket.emit('joinWorkspace', workspace._id);
+        socket.emit('joinWorkspace', workspace._id); // Notify the server to join the workspace
       });
     }
 
-    // Fetch and display workspaces on page load
+    // Fetch and display workspaces when the page loads
     fetchWorkspaces(userId);
 
-    // Handle incoming notifications
+    // Handle incoming notifications from the server
     socket.on('notification', (notification) => {
-      let acknowledged = true;
+      let acknowledged = true; // Assume the notification is acknowledged
       displayNotification(notification);
-      socket.emit('acknowledged', acknowledged, userId, notification);
+      socket.emit('acknowledged', acknowledged, userId, notification); // Send acknowledgment to the server
     });
 
-    // Display notifications
+    // Display notifications on the page
     function displayNotification(notification) {
       const notificationsDiv = document.getElementById('notifications');
       const notificationElement = document.createElement('div');
@@ -66,7 +68,6 @@
       notificationElement.innerText = `${notification.type}: ${notification.message}`;
       notificationsDiv.appendChild(notificationElement);
     }
-
   </script>
 </body>
 

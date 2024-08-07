@@ -5,14 +5,14 @@ const router = express.Router();
 
 /**
  * @route GET /
- * @desc Serve home page if session exists, otherwise login page
+ * @desc Serve the home page if the session exists, otherwise serve the login page.
  * @access Public
  */
 router.get('/', (req, res) => {
   if (req.userId) {
     res.sendFile(path.join(__dirname, '../public/home.html')); // Serve the home page if session exists
   } else {
-    res.sendFile(path.join(__dirname, '../public/login.html')); // Otherwise serve the login page
+    res.sendFile(path.join(__dirname, '../public/login.html')); // Otherwise, serve the login page
   }
 });
 

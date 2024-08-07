@@ -12,26 +12,35 @@
   <div id="login" class="bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-md">
     <h1 class="text-2xl font-bold mb-6 text-center">Sign In</h1>
     <form id="loginForm" class="space-y-4">
+      <!-- Input field for the user's email -->
       <input type="email" id="email" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Enter your email" required />
+      <!-- Submit button for the form -->
       <button type="submit" class="w-full p-2 rounded bg-indigo-600 hover:bg-indigo-700 focus:outline-none">Sign In</button>
     </form>
   </div>
+
   <script>
+    // Handle form submission for login
     document.getElementById('loginForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
+      e.preventDefault(); // Prevent the default form submission behavior
+      const email = document.getElementById('email').value; // Get the email value from the input field
+      
       try {
+        // Send a POST request to the server with the email for login
         const response = await fetch('/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ email })
+          body: JSON.stringify({ email }) // Send the email as JSON in the request body
         });
+        
         const data = await response.json();
         if (data.userId) {
+          // Redirect to the home page with the user ID as a query parameter
           window.location.href = `/?user=${data.userId}`;
         } else {
+          // Display an error message if login failed
           alert('Login failed: ' + data.error);
         }
       } catch (error) {

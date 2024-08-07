@@ -4,16 +4,17 @@ const Source = require('../models/Source');
 
 /**
  * @route GET /sources/:workspaceId
- * @description Create a new source for the given workspace ID
+ * @desc Create a new source for the given workspace ID.
+ * @access Public
  */
 router.get('/sources/:workspaceId', async (req, res) => {
   try {
     const { workspaceId } = req.params;
-    // Create and save the new  source
+    // Create and save the new source
     const newSource = await Source.create({
       workspace_id: workspaceId,
-      name: 'Database Source - test -2',
-      type: 'Database - test-2',
+      name: 'Database Source - test',
+      type: 'Database - test',
       configuration: {},
     });
 
@@ -26,7 +27,8 @@ router.get('/sources/:workspaceId', async (req, res) => {
 
 /**
  * @route GET /sources/:workspaceId/:sourceId
- * @description Update a source for the given workspace and source ID
+ * @desc Update a source for the given workspace and source ID.
+ * @access Public
  */
 router.get('/sources/:workspaceId/:sourceId', async (req, res) => {
   try {
@@ -52,7 +54,8 @@ router.get('/sources/:workspaceId/:sourceId', async (req, res) => {
 
 /**
  * @route GET /sources/:workspaceId/:sourceId/delete
- * @description Delete a source for the given workspace and source ID
+ * @desc Delete a source for the given workspace and source ID.
+ * @access Public
  */
 router.get('/sources/:workspaceId/:sourceId/delete', async (req, res) => {
   try {

@@ -7,7 +7,7 @@ const router = express.Router();
 
 /**
  * @route POST /login
- * @desc Handle user login
+ * @desc Handle user login by creating a session.
  * @access Public
  */
 router.post('/', async (req, res) => {
