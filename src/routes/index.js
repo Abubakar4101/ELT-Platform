@@ -9,7 +9,8 @@ const router = express.Router();
  * @access Public
  */
 router.get('/', (req, res) => {
-  if (req.userId) {
+  const userId = req.query.user;
+  if (userId) {
     res.sendFile(path.join(__dirname, '../public/home.html')); // Serve the home page if session exists
   } else {
     res.sendFile(path.join(__dirname, '../public/login.html')); // Otherwise, serve the login page

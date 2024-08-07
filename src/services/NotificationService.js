@@ -54,7 +54,7 @@ class NotificationService {
         redisClient.lPush(`missedEvents:${workspaceId}:${userId}`, JSON.stringify({ type, message }));
         
         // Emit notification event to connected users
-        if(global.userId == userId) io.emit('notification', { type, message });
+        if(global.userId == userId) io.to(workspaceId.toString()).emit('notification', { type, message });
       });
 
       return notification;

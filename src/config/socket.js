@@ -21,9 +21,6 @@ const initSocket = (server) => {
   io.on('connection', (socket) => {
     console.log('New client connected:', socket.id);
 
-    // Save the socket ID globally (for demonstration purposes)
-    global.socketId = socket.id;
-
     // Event listener for joining a workspace room
     socket.on('joinWorkspace', async (workspaceId) => {
       // Join the specified workspace room
@@ -31,7 +28,7 @@ const initSocket = (server) => {
       joinedWorkspace = workspaceId;
 
       // Fetch and emit missed events for the user from Redis
-      const missedEvents = await redisClient.lRange(`missedEvents:${workspaceId}:${socket.userId}`, 0, -1);
+      const missedEvents = await redisClient.lRange(`missedEvents:${workspaceId}:${userId}`, 0, -1);
       if (missedEvents) {
         missedEvents.forEach(notification => {
           // Emit each missed notification to the client with a timeout for acknowledgment
