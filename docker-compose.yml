@@ -1,21 +1,24 @@
+# Docker Compose file for setting up the ELT/ETL Notification System with Redis and the application.
+
 version: '3.8'
 
 services:
-
   redis:
+    # Use the latest Redis Stack image
     image: redis/redis-stack:latest
     restart: always
     ports:
-      - 6379:6379
-      - 8001:8001  # Expose RedisInsight port
+      - "6379:6379"  # Expose the default Redis port
+      - "8001:8001"  # Expose the RedisInsight port for visualizing Redis data
 
   app:
+    # Build the application from the Dockerfile in the current directory
     build: .
     restart: always
     working_dir: /elt-platform
     volumes:
-      - "/Users/AbdulbakrSiddique/Desktop/Programmers Force/ELT:/elt-platform"
+      - ./:/elt-platform  # Mount the current directory into the container
     ports:
-      - 3000:3000
+      - "3000:3000"  # Expose the application port
     depends_on:
-      - redis
+      - redis  # Ensure Redis service is started before the app
