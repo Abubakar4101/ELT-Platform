@@ -23,7 +23,7 @@ const sessionMiddleware = async (req, res, next) => {
       if (session) {
         // If session data is found, parse it and attach the user ID to the request object
         req.userId = JSON.parse(session).userId;
-        // Also, store the user ID globally (for demonstration purposes)
+        // Also, store the user ID globally (for debugging purposes)
         global.userId = req.userId;
       }
     } catch (error) {
