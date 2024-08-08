@@ -43,4 +43,37 @@ const server = app.listen(process.env.PORT, () => {
 global.io = initSocket(server);
 
 // Watch for changes in the Source collection to send notifications
-watchSources();
+const changeStream = watchSources();
+
+// Gracefully handle server shutdown
+process.on('SIGINT', async () => {
+  try {
+    // Close the change stream
+    if (changeStream) {
+      await changeStream.close();
+      console.log('Change stream closed');
+    }
+
+    // Close Redis connection if open
+    if (redisClient.isOpen) {
+      await redisClient.quit();
+      console.log('Redis connection closed');
+    }
+
+    // Close MongoDB connection if open
+    if (mongoose.connection.readyState === 1) {
+      await mongoose.connection.close();
+      console.log('MongoDB connection closed');
+    }
+
+    // Close the HTTP server
+    server.close(() => {
+      console.log('HTTP server closed');
+      process.exit(0); // Exit the process with a success code
+    });
+
+  } catch (err) {
+    console.error('Error occurred while shutting down:', err);
+    process.exit(1); // Exit the process with an error code
+  }
+});

@@ -51,7 +51,7 @@ class NotificationService {
       // Notify users in the workspace using WebSockets
       const io = global.io;
       userIds.forEach(userId => {
-        redisClient.lPush(`missedEvents:${workspaceId}:${userId}`, JSON.stringify({ type, message }));
+        redisClient.rPush(`missedEvents:${workspaceId}:${userId}`, JSON.stringify({ type, message }));
       });
       io.to(workspaceId.toString()).emit('notification', { type, message });
 

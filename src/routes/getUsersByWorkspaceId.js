@@ -34,7 +34,7 @@ router.get('/workspaces/:workspaceId/members', async (req, res) => {
   const { workspaceId } = req.params;
   try {
     // Fetch user documents by workspace ID
-    let users = await getUsersByWorkspaceId(new mongoose.Types.ObjectId(workspaceId));    
+    let users = await getUsersByWorkspaceId(mongoose.Types.ObjectId.createFromHexString(workspaceId));    
     res.status(200).json({ users });
   } catch (err) {
     console.error('Error fetching workspace members:', err);

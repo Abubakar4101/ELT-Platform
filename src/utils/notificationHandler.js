@@ -107,6 +107,8 @@ const watchSources = async () => {
 
     return workspace;
   };
+
+  return changeStream;
 };
 
 module.exports = watchSources;

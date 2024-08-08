@@ -20,7 +20,7 @@ const initSocket = (server) => {
   // Event listener for a new client connection
   io.on('connection', (socket) => {
     console.log('New client connected:', socket.id);
-
+    
     // Event listener for joining a workspace room
     socket.on('joinWorkspace', async (workspaceId) => {
       // Join the specified workspace room

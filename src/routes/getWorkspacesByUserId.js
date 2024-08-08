@@ -34,7 +34,7 @@ router.get('/users/:userId/workspaces', async (req, res) => {
   const { userId } = req.params;
   try {
     // Fetch workspace IDs by user ID
-    let workspaces = await getWorkspacesByUserId(new mongoose.Types.ObjectId(userId));
+    let workspaces = await getWorkspacesByUserId(mongoose.Types.ObjectId.createFromHexString(userId));
     res.status(200).json({ workspaces });
   } catch (err) {
     console.error('Error fetching user workspaces:', err);
