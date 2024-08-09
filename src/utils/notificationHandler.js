@@ -49,7 +49,7 @@ const watchSources = async () => {
           await redisClient.del(`source:${change.documentKey._id}`);
           sendNotification = true;
         }
-      } else if (change.operationType === 'update') {
+      } else if (change.operationType === 'update' ) {
         const cachedDocument = await redisClient.get(`source:${change.documentKey._id}`);
         if (cachedDocument) {
           ({ _id, workspace_id, name, workspaceName } = JSON.parse(cachedDocument));

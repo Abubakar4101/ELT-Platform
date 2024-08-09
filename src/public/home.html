@@ -19,10 +19,11 @@
   <div id="notifications" class="fixed bottom-0 right-0 p-4"></div>
 
   <script>
-    const socket = io(); // Initialize Socket.io
     const urlParams = new URLSearchParams(window.location.search); // Get URL parameters
     const userId = urlParams.get('user'); // Get the user ID from the URL
-
+    const socket = io("", {query: {
+      userId
+    }}); // Initialize Socket.io
     // Fetch the user's workspaces from the server
     async function fetchWorkspaces(userId) {
       try {
@@ -46,7 +47,6 @@
         workspaceElement.classList.add('bg-gray-700', 'p-4', 'rounded', 'shadow', 'mb-2');
         workspaceElement.innerText = workspace.name;
         workspacesDiv.appendChild(workspaceElement);
-        socket.emit('joinWorkspace', workspace._id); // Notify the server to join the workspace
       });
     }
 
@@ -59,6 +59,8 @@
       displayNotification(notification);
       socket.emit('acknowledged', acknowledged, userId, notification); // Send acknowledgment to the server
     });
+
+    socket.emit('disconnect', userId); // Notify the server when the user disconnects
 
     // Display notifications on the page
     function displayNotification(notification) {
